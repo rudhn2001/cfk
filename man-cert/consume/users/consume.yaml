@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consume-message
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consume-app
+  template:
+    metadata:
+      labels:
+        app: consume-app
+    spec:
+      containers:
+      - name: consume-data-container
+        image: anirudh2903/topicconsume:latest
+        volumeMounts:
+        - name: in-ssl-kafka-pkcs12
+          mountPath: /mnt/sslcerts
+        resources:
+          requests:
+            memory: 512Mi
+            cpu: 500m
+      volumes:
+      - name: in-ssl-kafka-pkcs12
+        secret:
+          secretName: kafka-pkcs12
