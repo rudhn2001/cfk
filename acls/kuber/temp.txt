@@ -1,0 +1,55 @@
+cat <<-EOF > /opt/confluentinc/kafka.properties
+bootstrap.servers=kafka.confluent.svc.cluster.local:9071
+security.protocol=SSL
+ssl.keystore.location=/mnt/sslcerts/keystore.jks
+ssl.keystore.password=mystorepassword
+ssl.truststore.location=/mnt/sslcerts/truststore.jks
+ssl.truststore.password=mystorepassword
+ssl.key.password=mystorepassword
+EOF
+
+
+cat <<-EOF > /opt/confluentinc/kafka.properties
+bootstrap.servers=kafka.confluent.svc.cluster.local:9071
+security.protocol=SSL
+ssl.keystore.location=/mnt/sslcerts/keystore.p12
+ssl.keystore.password=mystorepassword
+ssl.truststore.location=/mnt/sslcerts/truststore.p12
+ssl.truststore.password=mystorepassword
+ssl.key.password=mystorepassword
+EOF
+
+
+
+openssl genrsa -out rootCAkey.pem 2048
+
+openssl req -x509  -new -nodes \
+  -key rootCAkey.pem \
+  -days 3650 \
+  -out cacerts.pem \
+  -subj "/C=US/ST=CA/L=MVT/O=TestOrg/OU=Cloud/CN=Test"
+
+
+openssl x509 -in cacerts.pem -text -noout
+
+
+cfssl gencert -ca=cacerts.pem \
+-ca-key=rootCAkey.pem \
+-config=ca-config.json \
+-profile=server zookeeper-server-domain.json | cfssljson -bare zookeeper-server
+
+openssl x509 -in kafka-server.pem -text -noout
+
+
+
+kubectl create secret generic tls-zookeeper \
+  --from-file=fullchain.pem=zookeeper-server.pem \
+  --from-file=cacerts.pem=cacerts.pem \
+  --from-file=privkey.pem=zookeeper-server-key.pem \
+  --namespace confluent
+
+
+
+kubectl create secret generic credential \
+  --from-file=basic.txt=cred-users.txt \
+  --namespace confluent  

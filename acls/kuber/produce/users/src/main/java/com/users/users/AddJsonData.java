@@ -16,15 +16,15 @@ public class AddJsonData {
 
     String bootstrapServers = "pkc-4r087.us-west2.gcp.confluent.cloud:9092";
     String localhostServer = "localhost:9092";
-    String KubernetesServer0 = "kafka-0.kafka.mydomain.example:9092";
-    String KubernetesServer1 = "kafka-0.kafka.confluent.svc.cluster.local:9092";
+    String KubernetesServer0 = "kafka-0.kafka.confluent.svc.cluster.local:9071";
+    String KubernetesServer1 = "kafka-0.kafka.confluent.svc.cluster.local:9071";
 
     // API KEYS FOR ONLINE CLOUD
     // String apiKey = "LRUVLJHFTRQNI3B7";
     // String apiSecret = "yOKpzZZXcheVBkaphcRGh9kqLrLgGG8qHkmLxllI33Cl2r8Jwsb//D3/0dfhgBaZ";
 
-    String username="bob";
-    String password="bob";
+    String username="admin";
+    String password="Developer1";
 
 
     int i = 0;
@@ -70,7 +70,7 @@ public class AddJsonData {
                 if (flag == 1) {
                     System.out.println("JSON message sent successfully to topic: " + topic);
                     System.out.println("Values sent  : ");
-                    System.out.println("ID : " + key + "\n First Name : " + generateData.fname + "\n Last Name : "
+                    System.out.println("ID : " + key1 + "\n First Name : " + generateData.fname + "\n Last Name : "
                             + generateData.lname + "\n Address : " + generateData.address +
                             "\n Email : " + generateData.email + "\n Contact : " + generateData.contact);
 
