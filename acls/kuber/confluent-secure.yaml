@@ -55,7 +55,7 @@ spec:
   authorization:
     type: simple
     superUsers:
-    - User:kafka
+    - User:anirudh
   dependencies:
     zookeeper:
       endpoint: zookeeper.confluent.svc.cluster.local:2182
