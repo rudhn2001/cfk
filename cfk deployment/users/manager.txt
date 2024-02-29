@@ -1,2 +1,0 @@
-username=charlie_manager
-password=charliepassword

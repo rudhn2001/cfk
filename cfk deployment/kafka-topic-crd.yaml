@@ -1,9 +1,0 @@
-apiVersion: kafka.confluent.io/v1beta1
-kind: KafkaTopic
-metadata:
-  name: my-topic
-  namespace: confluent
-spec:
-  partitions: 3
-  replicationFactor: 1
-

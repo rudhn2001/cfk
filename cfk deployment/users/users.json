@@ -1,6 +1,0 @@
-{
-    "admin" : "admin",
-    "alice_producer" : "alicepassword",
-    "bob_consumer" : "bobpassword",
-    "charlie_manager" : "charliepassword"
-}

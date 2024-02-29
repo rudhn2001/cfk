@@ -1,3 +1,4 @@
+---
 apiVersion: platform.confluent.io/v1beta1
 kind: Zookeeper
 metadata:
@@ -10,10 +11,6 @@ spec:
     init: confluentinc/confluent-init-container:2.8.0
   dataVolumeCapacity: 10Gi
   logVolumeCapacity: 10Gi
-  authentication:
-    type: mtls
-  tls:
-    secretRef: tls-zookeeper    
 ---
 apiVersion: platform.confluent.io/v1beta1
 kind: Kafka
@@ -25,44 +22,12 @@ spec:
   image:
     application: confluentinc/cp-server:7.6.0
     init: confluentinc/confluent-init-container:2.8.0
-  dataVolumeCapacity: 10Gi
-  configOverrides:
-    server: 
-      - authorizer.class.name=kafka.security.authorizer.AclAuthorizer
-  tls:
-    secretRef: tls-kafka
-  listeners:
-    internal:
-      authentication:
-        type: mtls
-        principalMappingRules:
-          - RULE:^CN=([a-zA-Z0-9]*).*$/$1/
-      tls:
-        enabled: true
-    external:
-      authentication:
-        type: mtls
-        principalMappingRules:
-          - RULE:^CN=([a-zA-Z0-9]*).*$/$1/
-      tls:
-        enabled: true
-      externalAccess:
-        type: loadBalancer
-        loadBalancer:
-          domain: mydomain.example
-          brokerPrefix: b
-          bootstrapPrefix: kafka
-  authorization:
-    type: simple
-    superUsers:
-    - User:anirudh
+  dataVolumeCapacity: 100Gi
+  metricReporter:
+    enabled: true
   dependencies:
     zookeeper:
-      endpoint: zookeeper.confluent.svc.cluster.local:2182
-      authentication:
-        type: mtls
-      tls:
-        enabled: true
+      endpoint: zookeeper.confluent.svc.cluster.local:2181
 ---
 apiVersion: platform.confluent.io/v1beta1
 kind: ControlCenter
@@ -75,12 +40,3 @@ spec:
     application: confluentinc/cp-enterprise-control-center:7.6.0
     init: confluentinc/confluent-init-container:2.8.0
   dataVolumeCapacity: 10Gi
-  authentication:
-    type: mtls  
-  tls:
-    secretRef: tls-kafka
-  dependencies:
-    kafka:
-      bootstrapEndpoint: kafka.confluent.svc.cluster.local:9071
-      tls:
-        enabled: true
