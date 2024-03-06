@@ -17,14 +17,14 @@ public class AddJsonData {
     String bootstrapServers = "pkc-4r087.us-west2.gcp.confluent.cloud:9092";
     String localhostServer = "localhost:9092";
     String KubernetesServer0 = "kafka-0.kafka.confluent.svc.cluster.local:9071";
-    String KubernetesServer1 = "b0.mydomain.example:9092";
+    String KubernetesServer1 = "kafka-0.kafka.confluent.svc.cluster.local:9071";
 
     // API KEYS FOR ONLINE CLOUD
     // String apiKey = "LRUVLJHFTRQNI3B7";
     // String apiSecret = "yOKpzZZXcheVBkaphcRGh9kqLrLgGG8qHkmLxllI33Cl2r8Jwsb//D3/0dfhgBaZ";
 
-    String username="aliceproducer";
-    String password="alicepassword";
+    String username="admin";
+    String password="Developer1";
 
 
     int i = 0;
@@ -41,7 +41,7 @@ public class AddJsonData {
         Random rand = new Random();
         int key1 = rand.nextInt(100);
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KubernetesServer1);
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KubernetesServer0);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
         props.put("security.protocol", "SASL_PLAINTEXT");

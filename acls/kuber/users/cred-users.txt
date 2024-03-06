@@ -1,6 +1,0 @@
-c3: c3-secret,Administrators
-username=kafka
-password=kafka-secret
-admin: Developer1,Administrators,Describe,Read,Write,Create
-aliceproducer: alicepassword,Write,Create
-bobconsumer: bobpassword,Read

@@ -1,0 +1,11 @@
+steps 
+1: create ldap service
+2: create users
+3: create confluent service
+4: create produce and consumer service and assign users created from ldap
+5: 
+
+
+
+
+

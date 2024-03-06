@@ -1,3 +1,4 @@
+---
 apiVersion: platform.confluent.io/v1beta1
 kind: KafkaTopic
 metadata:
@@ -28,20 +29,9 @@ spec:
       - name: produce-data-container
         image: anirudh2903/topicproduce:latest
         volumeMounts:
-        - name: kafka-ssl-manual
-          mountPath: /mnt/sslcerts/
+        - name: kafka-properties
+          mountPath: /mnt
         resources:
           requests:
             memory: 512Mi
             cpu: 500m
-        env:
-        - name: KAFKA_SASL_MECHANISM
-          value: "PLAIN"
-        - name: KAFKA_SECURITY_PROTOCOL
-          value: "SASL_PLAINTEXT"
-        - name: KAFKA_OPTS
-          value: -Djava.security.auth.login.config=/mnt/client.properties
-      volumes:
-      - name: kafka-ssl-manual
-        secret:
-          secretName: kafka-pkcs12

@@ -1,0 +1,56 @@
+############################# Confluent Server Authorizer Settings  #############################
+authorizer.class.name=io.confluent.kafka.security.authorizer.ConfluentServerAuthorizer
+
+# Specify a list of Access Rule Providers to retain ACLs that have already been enabled and to enable RBAC
+confluent.authorizer.access.rule.providers= KRAFT_ACL,ZK_ACL,CONFLUENT
+
+# Specify when bootstrapping Confluent Platform and to assign a SystemAdmin
+super.users=<User:admin;User:mds>
+
+############################# Identity Provider Settings (LDAP) #############################
+# Search groups for group-based authorization.
+ldap.group.name.attribute=<sAMAccountName>
+ldap.group.object.class=group
+ldap.group.member.attribute=member
+ldap.group.member.attribute.pattern=CN=(.*),DC=rbac,DC=confluent,DC=io
+ldap.group.search.base=CN=Users,DC=rbac,DC=confluent,DC=io
+#Limit the scope of searches to subtrees off of base
+ldap.user.search.scope=2
+#Enable filters to limit search to only those groups needed
+ldap.group.search.filter=(|(CN=<specific group>)(CN=<specific group>))
+
+# Kafka authenticates to the directory service with the bind user.
+ldap.java.naming.provider.url=ldap://<hostname>:389
+ldap.java.naming.security.authentication=simple
+ldap.java.naming.security.credentials=<password>
+ldap.java.naming.security.principal=<mds-user-DN>
+
+# Locate users. Make sure that these attributes and object classes match what is in your directory service.
+ldap.user.name.attribute=<sAMAccountName>
+ldap.user.object.class=user
+ldap.user.search.base=<user-search-base-DN
+
+############################# MDS Server Settings #############################
+# Bind Metadata Service HTTP service to port 8090.
+confluent.metadata.server.listeners=http://0.0.0.0:8090
+# The key to encrypt the token (when you issue you a token)
+confluent.metadata.server.token.key.path=<path-to-token-key-pair.pem>
+# Supported authentication methods
+confluent.metadata.server.authentication.method=BEARER
+
+############################# Token Listener Settings #############################
+# Add named listener TOKEN to existing listeners and advertised.listeners
+advertised.listeners=<advertised.listeners>,TOKEN://localhost:9092
+listeners=<listeners>,TOKEN://:9092
+# Set SASL callback handler for handling tokens on login. This is essentially a noop if not used for inter-broker communication.
+listener.name.token.oauthbearer.sasl.login.callback.handler.class=io.confluent.kafka.server.plugins.auth.token.TokenBearerServerLoginCallbackHandler
+# Set SASL callback handler for verifying authentication token signatures
+listener.name.token.oauthbearer.sasl.server.callback.handler.class=io.confluent.kafka.server.plugins.auth.token.TokenBearerValidatorCallbackHandler
+# Configure the public key used to verify RBAC Metadata Service signatures
+# Note: username, password and metadataServerUrls must be set if used for inter-broker communication
+listener.name.token.oauthbearer.sasl.jaas.config= \
+   org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required \
+   publicKeyPath="<path-to-public.pem>";
+# Add protocol mapping for newly-added named listener TOKEN
+listener.security.protocol.map=<listener.map>,TOKEN:SASL_PLAINTEXT
+listener.name.token.sasl.enabled.mechanisms=OAUTHBEARER

@@ -41,11 +41,11 @@ spec:
         enabled: true
     external:
       authentication:
-        type: mtls
-        principalMappingRules:
-          - RULE:^CN=([a-zA-Z0-9]*).*$/$1/
+        type: plain
+        jaasConfig:
+          secretRef: creds
       tls:
-        enabled: true
+        enabled: false
       externalAccess:
         type: loadBalancer
         loadBalancer:

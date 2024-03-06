@@ -1,2 +1,0 @@
-username=bob_consumer
-password=bobpassword

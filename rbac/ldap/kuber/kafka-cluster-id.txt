@@ -1,0 +1,6 @@
+Confluent Resource Name: yJQaS6ltSiS95LumuxbUbA
+
+Scope:
+      Type      |           ID            
+----------------+-------------------------
+  kafka-cluster | yJQaS6ltSiS95LumuxbUbA 

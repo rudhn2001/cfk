@@ -1,0 +1,6 @@
+Connecting to localhost:2181
+
+WATCHER::
+
+WatchedEvent state:SyncConnected type:None path:null
+{"version":"1","id":"xq-PEpqTSoutAwe9O2TUvQ"}
