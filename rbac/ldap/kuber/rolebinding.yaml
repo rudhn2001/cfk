@@ -1,0 +1,72 @@
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic-write-user
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: george
+  role: DeveloperWrite
+  clustersScopeByIds:
+    kafkaClusterId: fFODpBkrTsqsyaHEIKw4Xg
+  resourcePatterns:
+    - name: "role"
+      patternType: LITERAL
+      resourceType: Topic
+
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic-write-user
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: george
+  role: DeveloperWrite
+  clustersScopeByIds:
+    kafkaClusterId: fFODpBkrTsqsyaHEIKw4Xg
+  resourcePatterns:
+    - name: "role"
+      patternType: LITERAL
+      resourceType: Topic
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic-read-user
+  namespace: confluent
+spec:
+  principal:
+    type: user
+    name: tim
+  role: DeveloperRead
+  clustersScopeByIds:
+    kafkaClusterId: fFODpBkrTsqsyaHEIKw4Xg
+  resourcePatterns:
+    - name: "role"
+      patternType: LITERAL
+      resourceType: Topic
+
+---
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: topic-read-group
+  namespace: confluent
+spec:
+  principal:
+    type: group
+    name: designers
+  role: DeveloperRead
+  clustersScopeByIds:
+    kafkaClusterId: fFODpBkrTsqsyaHEIKw4Xg
+  resourcePatterns:
+    - name: "role"
+      patternType: LITERAL
+      resourceType: Topic

@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ldap
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: ldap
+  serviceName: "ldap"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ldap
+    spec:
+      containers:
+      - name: ldap
+        args:
+        - --copy-service
+        - --loglevel=debug
+        imagePullPolicy: IfNotPresent
+        image: {{ .Values.image }}
+        ports:
+        - containerPort: 389
+          name: ldap
+        - containerPort: 636
+          name: ldaps
+        env:
+        {{- if .Values.tls.enabled }}
+        - name: LDAP_TLS_VERIFY_CLIENT
+          value: try
+        - name: LDAP_TLS
+          value: "true"
+        {{- end }}
+        {{- range $key, $val := .Values.env }}
+        {{ printf "- name: %s" $key }}
+        {{ printf "  value: \"%s\"" $val }}
+        {{- end }}
+        - name: LDAP_TLS_GENERATED_CERTS
+          value: "true" # Enable auto-generated TLS certificates
+        - name: LDAP_TLS_VERIFY_SERVER
+          value: "allow" # Optionally set verification mode for client connections
+        volumeMounts:
+        - mountPath: /var/lib/ldap
+          name: ldap-data
+        - mountPath: /etc/ldap/slapd.d
+          name: ldap-config
+       {{- if .Values.ldifs }}
+        - mountPath: /container/service/slapd/assets/config/bootstrap/ldif/custom
+          name: customldif
+       {{- end }}
+      volumes:
+      {{- if .Values.ldifs }}
+      - name: customldif
+        configMap:
+          defaultMode: 420
+          name: {{ .Values.name }}-ldifs
+      {{- end }}
+  volumeClaimTemplates:
+  - metadata:
+      name: ldap-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 500Mi
+  - metadata:
+      name: ldap-config
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 500Mi

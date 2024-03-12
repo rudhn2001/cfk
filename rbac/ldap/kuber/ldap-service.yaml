@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openldap
+  namespace: confluent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openldap
+  template:
+    metadata:
+      name: openldap
+      namespace: confluent
+      labels:
+        app: openldap
+    spec:
+      containers:
+        - name: openldap
+          image: avinashupadhya99/example_com_openldap:1.0.0
+          args:
+          - --copy-service
+          - --loglevel=debug
+          ports:
+          - containerPort: 389
+            name: ldap
+          - containerPort: 636
+            name: ldaps
+          env:
+          - name: "LDAP_ORGANISATION"
+            value: "Example Company"
+          - name: "LDAP_DOMAIN"
+            value: "example.com"
+          - name: "LDAP_ADMIN_PASSWORD"
+            value: "secret"
+          - name: "LDAP_BASE_DN"
+            value: "dc=example,dc=com"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ldap
+  namespace: confluent
+  labels:
+    app: openldap
+spec:
+  ports:
+    - port: 389
+      name: ldap
+    - port: 636
+      name: ldaps
+  clusterIP: None
+  selector:
+    app: openldap
