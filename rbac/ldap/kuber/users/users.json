@@ -1,5 +1,10 @@
 {
   "kafka": "kafka-secret",
   "rahul": "rahuldevops",
-  "deepak": "deepakdevops"
+  "deepak": "deepakdevops",
+  "george": "georgedeveloper",
+  "tim": "timdeveloper",
+  "connect": "connectsystem",
+  "control": "controlsystem",
+  "schema": "schemasystem"
 }

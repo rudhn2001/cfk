@@ -1,0 +1,15 @@
+username=connect
+password=connect-secret
+
+
+
+
+# Kafka Rest Proxy RBAC credential
+kubectl create secret generic krp-mds-client \
+  --from-file=bearer.txt=krp-mds-client.txt \
+  --namespace confluent
+# Kafka REST credential
+sudo kubectl create secret generic rest-credential \
+  --from-file=bearer.txt=bearer.txt \
+  --from-file=basic.txt=bearer.txt \
+  --namespace confluent

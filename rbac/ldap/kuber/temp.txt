@@ -104,7 +104,7 @@ kubectl create secret generic mds-client \
   --namespace confluent
 
 
-sudo kubectl port-forward openldap-service-55d674dc7d-4pkmp 10389:389
+sudo kubectl port-forward openldap-85845bd9b7-gc9f7 10389:389
 
 
 for checking the kafka cluster id

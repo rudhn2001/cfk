@@ -1,2 +1,2 @@
-username=kafka
-password=kafka-secret
+username=rahul
+password=rahuldevops
