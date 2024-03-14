@@ -1,0 +1,21 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: Connector
+metadata:
+  name: postgres-source-connector
+  namespace: confluent
+spec:
+  class: io.confluent.connect.jdbc.JdbcSourceConnector
+  taskMax: 1
+  configs:
+    connector.class: "io.confluent.connect.jdbc.JdbcSourceConnector"
+    connection.url: "jdbc:postgresql://postgres:5432/users"
+    connection.user: "postgres"
+    connection.password: "postgres"
+    mode: "incrementing"
+    topic.prefix: "postgres-"
+    incrementing.column.name: "user_id"
+    table.whitelist: "userdata"
+    poll.interval.ms: "5000"
+    key.Converter: "org.apache.kafka.connect.storage.StringConverter"
+    value.Converter: "org.apache.kafka.connect.storage.StringConverter"
+    value.converter.schemas.enable: "false"

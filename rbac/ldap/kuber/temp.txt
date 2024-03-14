@@ -82,12 +82,6 @@ providing authentication credentials
 
 make a secret of the credentials
 
-kubectl create secret generic credential \
-  --from-file=plain-users.json=users.json \
-  --from-file=plain.txt=users.txt \
-  --from-file=ldap.txt=ldap.txt \
-  --namespace confluent
-
 providing rbac principal credentials
 
 first create a secret object for mds (since we have already created key before we can use that itself)

@@ -1,16 +1,2 @@
 username=kafka
 password=kafka-secret
-username=rahul
-password=rahuldevops
-username=deepak
-password=deepakdevops
-username=george
-password=georgedeveloper
-username=tim
-password=timdeveloper
-username=connect
-password=connectsystem
-username=control
-password=controlsystem
-username=schema
-password=schemasystem
