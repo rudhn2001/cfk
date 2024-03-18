@@ -5,6 +5,13 @@ CONNECT THE POSTGRESQL POD WITH THE TOPIC IN THE CONFLUENT POD
 IF POSSIBLE CREATE A JAVA PRODUCER AND CONSUMER PODS , THE JAVA PRODUCER POD SENDS THE DATA INTO THE POSTGRES WHICH WILL IN TURN SEND THE DATA IN THE TOPIC
 (OPTIONAL)
 
+CREATE A MYSQL OPERATOR IN KUBERNETES (NO USING PODS) AND THE CONFLUENT PLATFORM POD IN THE KUBENETES ALONG WITH CONNECT AND CONTROL CENTER
+CONNECT THE MYSQL OPERATOR WITH THE TOPIC IN THE CONFLUENT POD
+IF POSSIBLE CREATE A JAVA PRODUCER AND CONSUMER PODS, THE JAVA PRODUCER WILL SEND THE DATA IN THE TOPIC AND USING THE SINK CONNECTOR WILL TRANSFER THE DATA TO THE 
+MYSQL TABLE.
+(OPTIONAL)
+
+POSTGRES DEPLOYMENT
 
 1. created a POSTGRESQL config yaml
 
@@ -31,7 +38,7 @@ sudo kubectl get  pods
 
 5. connect to postgresql using kubectl exec command
 
-sudo kubectl exec -it postgres-76dcf974cb-7hqqz -- psql -h localhost -U postgres --password -p 5432 users
+sudo kubectl exec -it postgres-76dcf974cb-zkdw6 -- psql -h localhost -U postgres --password -p 5432 users
 
 Backup and Restore PostgreSQL Database
 kubectl exec -it postgres-665b7554dc-cddgq -- pg_dump -U ps_user -d ps_db > db_backup.sql
@@ -43,18 +50,30 @@ psql -U ps_user -d ps_db -f /tmp/db_backup.sql
 io.confluent.connect.jdbc.JdbcSourceConnector
 
 
-kubectl create secret generic mypwds \
-        --from-literal=rootUser=root \
-        --from-literal=rootHost=% \
-        --from-literal=rootPassword="sakila"
+sudo helm install mycluster mysql-operator/mysql-innodbcluster \
+    --set credentials.root.user='root' \
+    --set credentials.root.password='sakila' \
+    --set credentials.root.host='%' \
+    --set serverInstances=1 \
+    --set routerInstances=1 \
+    --set tls.useSelfSigned=true
 
 
 
+printf $(printf '\%o' `kubectl get secret my-release-mysql -o jsonpath="{.data.mysql-root-password[*]}"`)
+
+helm install my-release \
+  --set mysqlRootPassword=admin,mysqlUser=admin,mysqlPassword=admin,mysqlDatabase=users \
+    stable/mysql
+password = admin
+user = admin
+rootPassword = admin
+database = users
 
 helm install mycluster mysql-operator/mysql-innodbcluster \
-        --namespace confluent \
-        --set credentials.root.user='root' \
-        --set credentials.root.password='sakila' \
-        --set credentials.root.host='%' \
-        --set serverInstances=1 \
-        --set routerInstances=1
+    --set credentials.root.user='root' \
+    --set credentials.root.password='root' \
+    --set credentials.root.host='%' \
+    --set serverInstances=1 \
+    --set routerInstances=1 \
+    --set tls.useSelfSigned=true

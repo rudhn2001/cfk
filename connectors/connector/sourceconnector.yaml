@@ -1,7 +1,7 @@
 apiVersion: platform.confluent.io/v1beta1
 kind: Connector
 metadata:
-  name: postgres-source-connector
+  name: source-connector
   namespace: confluent
 spec:
   class: io.confluent.connect.jdbc.JdbcSourceConnector
@@ -12,10 +12,11 @@ spec:
     connection.user: "postgres"
     connection.password: "postgres"
     mode: "incrementing"
-    topic.prefix: "postgres-"
+    topic.prefix: "postgres_"
     incrementing.column.name: "user_id"
     table.whitelist: "userdata"
     poll.interval.ms: "5000"
-    key.Converter: "org.apache.kafka.connect.storage.StringConverter"
-    value.Converter: "org.apache.kafka.connect.storage.StringConverter"
-    value.converter.schemas.enable: "false"
+    key.converter: "io.confluent.connect.avro.AvroConverter"
+    value.converter: "io.confluent.connect.avro.AvroConverter"
+    key.converter.schema.registry.url: "http://schemaregistry.confluent.svc.cluster.local:8081"
+    value.converter.schema.registry.url: "http://schemaregistry.confluent.svc.cluster.local:8081"

@@ -28,6 +28,7 @@ spec:
   dependencies:
     zookeeper:
       endpoint: zookeeper.confluent.svc.cluster.local:2181
+
 ---
 apiVersion: platform.confluent.io/v1beta1
 kind: Connect
@@ -35,8 +36,6 @@ metadata:
   name: connect
   namespace: confluent
 spec:
-  keyConverterType: io.confluent.connect.json.JsonConverter
-  valueConverterType: io.confluent.connect.json.JsonConverter
   replicas: 1
   image:
     application: confluentinc/cp-server-connect:7.6.0
@@ -45,14 +44,19 @@ spec:
     type: onDemand
     onDemand:
       plugins:
-        locationType: url
-        url:
-          - name: kafka-connect-jdbc # the url is used here as we needed to build our own connector lib to include the mysql jdbc jar
-            archivePath: https://raw.githubusercontent.com/confluentinc/confluent-kubernetes-examples/master/hybrid/ccloud-JDBC-mysql/confluentinc-kafka-connect-jdbc-10.2.5.zip
-            checksum: 9d033fabac89ec0b35a97246f7ca3a36800bcb402ccfbd76adebd4c4c9ca6e7d6a044a9162383a18f99400893581b55a87b9fe89e35276507e9a3fb6cff3fda0
+        locationType: confluentHub
+        confluentHub:
+          - name: kafka-connect-hdfs3
+            owner: confluentinc
+            version: latest
+  keyConverterType: io.confluent.connect.avro.AvroConverter
+  valueConverterType: io.confluent.connect.avro.AvroConverter
   dependencies:
     kafka:
       bootstrapEndpoint: kafka:9071
+    schemaRegistry:
+      url: http://schemaregistry.confluent.svc.cluster.local:8081
+      
 ---
 apiVersion: platform.confluent.io/v1beta1
 kind: ControlCenter

@@ -1,0 +1,23 @@
+apiVersion: platform.confluent.io/v1beta1
+kind: Connector
+metadata:
+  name: sink-connector
+  namespace: confluent
+spec:
+  class: io.confluent.connect.jdbc.JdbcSinkConnector
+  taskMax: 1
+  configs:
+    connector.class: "io.confluent.connect.jdbc.JdbcSinkConnector"
+    connection.url: "jdbc:mysql://my-release-mysql:3306/users"
+    connection.user: "root"
+    connection.password: "admin"
+    mode: "incrementing"
+    topics: "postgres_userdata"
+    pk.mode: "record_value"
+    pk.fields: "user_id"
+    insert.mode: "upsert"
+    poll.interval.ms: "5000"
+    key.converter: "io.confluent.connect.avro.AvroConverter"
+    value.converter: "io.confluent.connect.avro.AvroConverter"
+    key.converter.schema.registry.url: "http://schemaregistry.confluent.svc.cluster.local:8081"
+    value.converter.schema.registry.url: "http://schemaregistry.confluent.svc.cluster.local:8081"
